@@ -26,6 +26,10 @@ public class Client implements Runnable {
 	public static int greutateCos;
 	private boolean stareMiscare = false;
 	
+	// Variabile de simulare
+	long timpInit;
+	long durataMersCasa;
+	long timpInitCasa;
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
 	private Image imagineClient = new javax.swing.ImageIcon("imagini/client.png").getImage();
@@ -80,6 +84,10 @@ public class Client implements Runnable {
 		return indexCasa;
 	}
 	
+	public void timpInitCasa() {
+		timpInitCasa = System.currentTimeMillis();
+	}
+	
 	// Metoda este statica fiindca ne dorim ca toti clientii sa aiba o cant. generica
 	public static void setGreutateCos(int cantitate) {
 		greutateCos = cantitate;
@@ -126,12 +134,16 @@ public class Client implements Runnable {
 	@Override
 	public void run() {
 		try {
+			timpInit = System.currentTimeMillis();
 			while(true) {
 				if(stareMiscare) {
 					mutaClient();
 					if(atDestinatie()) {
 						// chiar numai odata se poate intampla asta
+						timpInitCasa = System.currentTimeMillis();
 						stareMiscare = false;
+						durataMersCasa = Math.abs(System.currentTimeMillis() - timpInit) / 1000;
+						GUI.commentTextArea.append("Clientul a ajuns la casa in "+ durataMersCasa +" secunde\n");
 					}
 				}
 				Thread.sleep(VITEZA_CLIENT);

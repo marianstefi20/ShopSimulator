@@ -97,6 +97,7 @@ public class MultimeClienti implements Runnable {
 			while(true) {
 				if(start) {
 					randomCreation();
+					GUI.commentTextArea.append("A fost adaugat un client nou!\n");
 					vfCozi();
 				}
 				Thread.sleep(generator.nextInt(intervalGenerare));

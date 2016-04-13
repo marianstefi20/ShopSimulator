@@ -39,19 +39,24 @@ public class Casa implements Runnable {
 	
 	public synchronized void addClient(Client c) {
 		coadaClienti.addElement(c);
-		notifyAll();
+		//notifyAll();
 	}
 	
 	public synchronized void removeClient() throws InterruptedException {
 		while(coadaClienti.size() == 0)
 			wait();
-		//Client c = coadaClienti.poll();
 		Client c = coadaClienti.elementAt(0);
+		long durataMersCasa = Math.abs(System.currentTimeMillis() - c.timpInitCasa) / 1000;
+		GUI.commentTextArea.append("Clientul a fost deservit de catre casa in "+durataMersCasa+" secunde!\n");
+		
 		coadaClienti.removeElementAt(0);
 		c.startMiscare();
-		System.out.println("Client a fost deservit de catre casa!\n");
 		notifyAll();
 		//return coadaClienti.poll();
+	}
+	
+	public long timpLaCasa() {
+		return coadaClienti.elementAt(0).timpInitCasa;
 	}
 	
 	public synchronized int getNrClienti() {

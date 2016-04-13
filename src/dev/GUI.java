@@ -9,15 +9,21 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.AncestorListener;
 
 /**
@@ -30,6 +36,7 @@ public class GUI extends JFrame implements Runnable, ActionListener {
 	public static final int LATIME = 800;
 	public static final int INALTIME = 600;
 	public static final int LATIME_CASA = 200;
+	public static final JTextArea commentTextArea = new JTextArea("",15,30);
 	
 	public MyPanel drawingPanel = new MyPanel(this);
 	public JFrame mainFrame;
@@ -58,7 +65,7 @@ public class GUI extends JFrame implements Runnable, ActionListener {
 	
 	public GUI(String titluSimulare) {
 		super(titluSimulare);		
-		setSize(LATIME, INALTIME);
+		setSize(LATIME+400, INALTIME);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		
@@ -123,7 +130,8 @@ public class GUI extends JFrame implements Runnable, ActionListener {
 		
 	}
 	
-	public void prepareGUI() {	
+	public void prepareGUI() {
+		this.setLayout(new BorderLayout());
 		JPanel panel1 = new JPanel(false);
 		panel1.setSize(new Dimension(LATIME, 60));
 		panel1.setBackground(Color.white);
@@ -154,6 +162,18 @@ public class GUI extends JFrame implements Runnable, ActionListener {
 		
 		// adaugam panoul de desenare la acest JFrame
 		getContentPane().add(drawingPanel);
+		
+		JPanel panel2 = new JPanel();
+		panel2.setPreferredSize(new Dimension(400, 200));
+		TitledBorder title;
+		title = BorderFactory.createTitledBorder("Logger");
+		title.setTitleJustification(TitledBorder.CENTER);
+		panel2.setBorder(title);
+	
+		JScrollPane scrollPane = new JScrollPane(commentTextArea);
+		panel2.add(scrollPane);
+		getContentPane().add(panel2,  BorderLayout.EAST);
+		
 		setVisible(true);
 	}
 	
@@ -195,6 +215,7 @@ public class GUI extends JFrame implements Runnable, ActionListener {
 				
 			}
 			if(startActiv) {
+				validate();
 				repaint(); // Metoda actualizeaza elementele ecranului
 				// verifica care clienti au acum timpul sub 0 si ii pune in miscare daca da
 				clienti.setDestinatie();
@@ -202,7 +223,34 @@ public class GUI extends JFrame implements Runnable, ActionListener {
 			}
 		}
 	}
-
+    
+    
+    private static void mkClient() {
+		JTextField field1 = new JTextField("");
+        JTextField field2 = new JTextField("");
+        JTextField field3 = new JTextField("");
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+        panel.setPreferredSize(new Dimension(400, 200));
+        panel.add(new JLabel("Nume: "));
+        panel.add(field1);
+        panel.add(new JLabel("Email: "));
+        panel.add(field2);
+        panel.add(new JLabel("Telefon: "));
+        panel.add(field3);
+        int result = JOptionPane.showConfirmDialog(null, panel, "Adauga un client",
+            JOptionPane.OK_CANCEL_OPTION, JOptionPane.CLOSED_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+        	ArrayList<String> data = new ArrayList<String>();
+        	data.add(field1.getText());
+        	data.add(field2.getText());
+        	data.add(field3.getText());
+        	
+        	//Client nouClient = new Client(data);
+            System.out.println("Un nou client a fost adaugat! \n");
+        } else {
+            System.out.println("Cancelled");
+        }
+	}
     /**
      * Incepe initializarea programului
      */
